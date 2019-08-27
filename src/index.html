@@ -13,17 +13,22 @@
     #game {
       display: block;
       margin: auto;
-      background: blue;
+      background: #87cefa;
+      transform-origin: top;
+      backface-visibility: hidden;
+      transform: translateZ(0);
+      -webkit-font-smoothing: subpixel-antialiased;
     }
   </style>
 </head>
 
-<body>
-  <canvas id="game" width="320" height="320"></canvas>
+<body onload="resize()" onresize="resize()">
+  <canvas id="game" width="320" height="192"></canvas>
   <script src="libs/kontra.js"></script>
   <script src="scripts/render-queue.js"></script>
   <script src="scripts/main.js"></script>
   <script src="scripts/tileset.js"></script>
+  <script src="scripts/lvl1.js"></script>
   <script src="scripts/main-character.js"></script>
 </body>
 

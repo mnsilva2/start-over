@@ -5,6 +5,8 @@ let { canvas } = init();
 
 initKeys();
 
+
+
 let loop = GameLoop({
   update: function () {
     renderQueue.background.forEach(element => {
@@ -18,10 +20,27 @@ let loop = GameLoop({
     // });
     if (mainCharacter) {
       if (keyPressed('d') || keyPressed('right')) {
-        mainCharacter.x += 1
+        if (!mainCharacter.isHittingSolid(lvl1).right) {
+          mainCharacter.x += 1
+        }
       }
       if (keyPressed('a') || keyPressed('left')) {
-        mainCharacter.x -= 1
+        if (!mainCharacter.isHittingSolid(lvl1).left) {
+          mainCharacter.x -= 1
+        }
+      }
+      if ((keyPressed('w') || keyPressed('up')) && mainCharacter.midAir === 0) {
+        mainCharacter.y -= 2
+        mainCharacter.midAir++;
+      }
+      if (mainCharacter.midAir < 8 && mainCharacter.midAir > 0) {
+        mainCharacter.y -= 2
+        mainCharacter.midAir++;
+      }
+      if (mainCharacter.midAir == 8 && !mainCharacter.isHittingSolid(lvl1).down) {
+        mainCharacter.y += 2
+      } else {
+        mainCharacter.midAir = 0;
       }
       mainCharacter.update();
     }
@@ -42,4 +61,16 @@ let loop = GameLoop({
   }
 });
 
-loop.start();    
+loop.start();
+
+function resize() {
+  let scaleAmountY = Math.floor(window.innerHeight / 192);
+  let scaleAmountX = Math.floor(window.innerWidth / 320);
+
+  if (scaleAmountY > scaleAmountX) {
+    document.getElementById("game").style.transform = "scale(" + scaleAmountX + ") translateZ(0)";
+  } else {
+    document.getElementById("game").style.transform = "scale(" + scaleAmountY + ") translateZ(0)";
+  }
+
+}
