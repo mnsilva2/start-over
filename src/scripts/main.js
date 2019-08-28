@@ -53,7 +53,7 @@ let loop = GameLoop({
           }
         } else {
           mainCharacter.isJumping = false;
-          mainCharacter.jumpIndex = 20
+          // mainCharacter.jumpIndex = 20
         }
       }
       if (mainCharacter.isFalling) {
@@ -61,6 +61,7 @@ let loop = GameLoop({
         mainCharacter.jumpIndex--;
         if (mainCharacter.isHittingSolid(lvl1).down) {
           mainCharacter.isFalling = false;
+          mainCharacter.alignDown();
         }
       }
 
