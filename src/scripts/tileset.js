@@ -21,8 +21,8 @@ img.onload = function () {
 
                         let cloud = Math.floor(Math.random() * 3);
                         // console.log(clouds[cloud])
-                        // lvl1[i] = clouds[cloud][0];
-                        // lvl1[i + 1] = clouds[cloud][1];
+                        lvl1[i] = clouds[cloud][0];
+                        lvl1[i + 1] = clouds[cloud][1];
 
                     }
                     break;
