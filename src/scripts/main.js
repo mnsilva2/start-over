@@ -29,19 +29,66 @@ let loop = GameLoop({
           mainCharacter.x -= 1
         }
       }
-      if ((keyPressed('w') || keyPressed('up')) && mainCharacter.midAir === 0) {
-        mainCharacter.y -= 2
-        mainCharacter.midAir++;
-      }
-      if (mainCharacter.midAir < 8 && mainCharacter.midAir > 0) {
-        mainCharacter.y -= 2
-        mainCharacter.midAir++;
-      }
-      if (mainCharacter.midAir == 8 && !mainCharacter.isHittingSolid(lvl1).down) {
-        mainCharacter.y += 2
+      if (!mainCharacter.isJumping && !mainCharacter.isFalling) {
+        if (keyPressed('w') || keyPressed('up')) {
+          mainCharacter.isJumping = true;
+          mainCharacter.jumpIndex = 20
+        }
+        if (!mainCharacter.isHittingSolid(lvl1).down) {
+          mainCharacter.isFalling = true;
+          mainCharacter.jumpIndex = 0;
+        }
       } else {
-        mainCharacter.midAir = 0;
+        //jumping logic
+        if (mainCharacter.jumpIndex >= -20) {
+          if (mainCharacter.jumpIndex > 0) {
+            mainCharacter.y -= (mainCharacter.jumpIndex ** 2) * 0.01
+          } else {
+            mainCharacter.y += (mainCharacter.jumpIndex ** 2) * 0.01
+            mainCharacter.isFalling = true;
+          }
+          mainCharacter.jumpIndex--;
+          if (mainCharacter.isHittingSolid(lvl1).down) {
+            mainCharacter.jumpIndex = -21
+          }
+        } else {
+          mainCharacter.isJumping = false;
+          mainCharacter.jumpIndex = 20
+        }
       }
+      if (mainCharacter.isFalling) {
+        mainCharacter.y += (mainCharacter.jumpIndex ** 2) * 0.01
+        mainCharacter.jumpIndex--;
+        if (mainCharacter.isHittingSolid(lvl1).down) {
+          mainCharacter.isFalling = false;
+        }
+      }
+
+      // if ((keyPressed('w') || keyPressed('up')) && !mainCharacter.isJumping && !mainCharacter.isFalling) {
+      //   mainCharacter.y -= mainCharacter.jumpArc();
+      //   mainCharacter.isJumping = true;
+      // }
+      // if (mainCharacter.isJumping) {
+      //   mainCharacter.y -= mainCharacter.jumpArc();
+      //   if (mainCharacter.isHittingSolid(lvl1).down) {
+      //     mainCharacter.isJumping = false;
+      //     mainCharacter.jumpIndex = 0;
+      //   }
+      // } else {
+      //   if (!mainCharacter.isHittingSolid(lvl1).down) {
+      //     mainCharacter.y += 1
+      //     mainCharacter.isFalling = true;
+      //   } else {
+      //     if (mainCharacter.isFalling) {
+      //       mainCharacter.isFalling = false;
+      //     }
+      //   }
+      // }
+
+      // if (mainCharacter.isHittingSolid(lvl1).down && mainCharacter.isFalling) {
+      // }
+
+
       mainCharacter.update();
     }
   },
