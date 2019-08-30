@@ -3,32 +3,17 @@ let tileEngine;
 let img = new Image();
 img.src = 'assets/Maytch 16x16 Tilesets/tilesheet_grass.png';
 img.onload = function () {
+    layers = []
+    for (let i = 0; i < levels.length; i++) {
+        layers.push({
+            name: "lvl" + i + 1,
+            data: addClouds(levels[i].lvl)
+        })
 
 
-    const clouds = [[11, 12], [13, 14], [15, 16]]
-    // for (let i = 0; i < lvl1.length; i++) {
-    //     const tile = lvl1[i];
-    //     if (i < lvl1.length - 1) {
-    //         const nexttile = lvl1[i + 1];
+    }
 
-    //         if (i % 20 == 19 || tile !== nexttile) {
-    //             continue;
-    //         }
 
-    //         switch (tile) {
-    //             case 0:
-    //                 if (Math.random() > 0.9) {
-
-    //                     let cloud = Math.floor(Math.random() * 3);
-    //                     // console.log(clouds[cloud])
-    //                     lvl1[i] = clouds[cloud][0];
-    //                     lvl1[i + 1] = clouds[cloud][1];
-
-    //                 }
-    //                 break;
-    //         }
-    //     }
-    // }
 
     tileEngine = TileEngine({
         // tile size
@@ -46,12 +31,34 @@ img.onload = function () {
         }],
 
         // layer object
-        layers: [{
-            name: 'lvl1',
-            //dirt tiles 
-            data: levels[currentLvl].lvl
-        }]
+        layers: layers
     });
 
     addToRenderQueue(tileEngine, RENDER_QUEUE_TYPES.BACKGROUND, {})
+}
+
+const clouds = [[11, 12], [13, 14], [15, 16]]
+function addClouds(lvl) {
+    for (let i = 0; i < lvl.length; i++) {
+        const tile = lvl[i];
+        if (i < lvl.length - 1) {
+            const nexttile = lvl[i + 1];
+
+            if (i % 20 == 19 || tile !== nexttile) {
+                continue;
+            }
+
+            switch (tile) {
+                case 0:
+                    if (Math.random() > 0.9) {
+                        let cloud = Math.floor(Math.random() * 3);
+                        lvl[i] = clouds[cloud][0];
+                        lvl[i + 1] = clouds[cloud][1];
+
+                    }
+                    break;
+            }
+        }
+    }
+    return lvl;
 }

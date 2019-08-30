@@ -5,7 +5,7 @@ let { canvas } = init();
 
 initKeys();
 let currentLvl = 0;
-let mainCharacter;
+let mainCharacter = undefined;
 let clone = [];
 let cloneIx = -1;
 let backwards = false;
@@ -20,31 +20,33 @@ let loop = GameLoop({
     if (typeof mainCharacter !== undefined) {
       let oldX = mainCharacter.x
       let oldY = mainCharacter.y
-      if (keyPressed("r") || cloneIx > -1) {
-        if (backwards) {
-          cloneIx -= 10
-          if (cloneIx >= 0) {
-            mainCharacter.x = clone[cloneIx].x;
-            mainCharacter.y = clone[cloneIx].y;
-          } else {
-            cloneIx = 0;
-            backwards = false;
-          }
+      if (keyPressed("r")) {
 
-        }
-        cloneIx++;
-        if (cloneIx < clone.length - 1) {
-          mainCharacter.x = clone[cloneIx].x;
-          mainCharacter.y = clone[cloneIx].y;
-        } else {
-          if (cloneIx < clone.length + 30) {
-            backwards = true;
-          }
-        }
-      } else {
-        mainCharacter.move();
-        clone.push({ x: mainCharacter.x, y: mainCharacter.y });
+        // if (backwards) {
+        //   cloneIx -= 10
+        //   if (cloneIx >= 0) {
+        //     mainCharacter.x = clone[cloneIx].x;
+        //     mainCharacter.y = clone[cloneIx].y;
+        //   } else {
+        //     cloneIx = 0;
+        //     backwards = false;
+        //   }
+
+        // }
+        // cloneIx++;
+        // if (cloneIx < clone.length - 1) {
+        //   mainCharacter.x = clone[cloneIx].x;
+        //   mainCharacter.y = clone[cloneIx].y;
+        // } else {
+        //   if (cloneIx < clone.length + 30) {
+        //     backwards = true;
+        //   }
+        // }
       }
+      mainCharacter.move();
+      clone.push({ x: mainCharacter.x, y: mainCharacter.y });
+
+
       if (mainCharacter.x !== oldX) {
         mainCharacter.playAnimation('walk')
       } else {
