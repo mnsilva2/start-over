@@ -16,10 +16,10 @@ function addToRenderQueue(obj, type, data) {
             renderQueue.sprite.push({ obj, data })
             break;
         case RENDER_QUEUE_TYPES.BACKGROUND:
-            renderQueue.sprite.push({ obj, data })
+            renderQueue.background.push({ obj, data })
             break;
         case RENDER_QUEUE_TYPES.MAIN:
-            renderQueue.sprite.push({ obj, data })
+            renderQueue.MAIN.push({ obj, data })
             break;
     }
 }

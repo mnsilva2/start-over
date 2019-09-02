@@ -36,7 +36,6 @@ mainCharacter = Sprite({
     isJumping: false,
     isFalling: true,
     jumpIndex: 0,
-
     currentSpeed: 0,
 
     move: () => {
@@ -56,7 +55,7 @@ mainCharacter = Sprite({
             }
         }
         if (keyPressed('a') || keyPressed('left')) {
-            // mainCharacter.playAnimation('walk')
+            mainCharacter.playAnimation('walk')
 
             if (mainCharacter.isHittingSolid(levels[currentLvl].lvl).left) {
                 mainCharacter.currentSpeed = 0;
@@ -76,7 +75,7 @@ mainCharacter = Sprite({
         mainCharacter.x += mainCharacter.currentSpeed;
 
         if (!keyPressed('a') && !keyPressed('left') && !keyPressed('d') && !keyPressed('right')) {
-            // mainCharacter.playAnimation('idle')
+            mainCharacter.playAnimation('idle')
             if (mainCharacter.currentSpeed < 0.1 && mainCharacter.currentSpeed > -0.1) {
                 mainCharacter.currentSpeed = 0
                 mainCharacter.centerPixel()
@@ -161,6 +160,15 @@ mainCharacter = Sprite({
     centerPixel: () => {
         let self = mainCharacter;
         self.x = Math.round(self.x);
+    },
+    isInEndSpot: function () {
+        // console.log("Math.round(this.x)", Math.round(this.x));
+        // console.log("levels[currentLvl].end.x", levels[currentLvl].end.x);
+        // console.log("Math.round(this.y)", Math.round(this.y));
+        // console.log("levels[currentLvl].end.y", levels[currentLvl].end.y);
+        return (Math.round(this.x) === levels[currentLvl].end.x * 16 && Math.round(this.y) && levels[currentLvl].end.y * 16)
+
+
     }
 });
 

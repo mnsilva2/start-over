@@ -6,14 +6,10 @@ img.onload = function () {
     layers = []
     for (let i = 0; i < levels.length; i++) {
         layers.push({
-            name: "lvl" + i + 1,
+            name: "lvl" + (i + 1),
             data: addClouds(levels[i].lvl)
         })
-
-
     }
-
-
 
     tileEngine = TileEngine({
         // tile size

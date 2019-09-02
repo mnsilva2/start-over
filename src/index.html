@@ -25,20 +25,10 @@
       image-rendering: crisp-edges;
       image-rendering: pixelated;
     }
-
-    img {
-      transform-origin: top left;
-      transform: scale(5) translateZ(0);
-      /* transform: ; */
-      backface-visibility: hidden;
-
-
-    }
   </style>
 </head>
 
 <body onload="resize()" onresize="resize()">
-  <!-- <img src="https://images-wixmp-ed30a86b8c4ca887773594c2.wixmp.com/f/8532fa84-d569-46b8-930d-f5513154a075/d9vgypu-adb7abc3-3c7b-4942-be03-d1325f820336.png?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1cm46YXBwOjdlMGQxODg5ODIyNjQzNzNhNWYwZDQxNWVhMGQyNmUwIiwiaXNzIjoidXJuOmFwcDo3ZTBkMTg4OTgyMjY0MzczYTVmMGQ0MTVlYTBkMjZlMCIsIm9iaiI6W1t7InBhdGgiOiJcL2ZcLzg1MzJmYTg0LWQ1NjktNDZiOC05MzBkLWY1NTEzMTU0YTA3NVwvZDl2Z3lwdS1hZGI3YWJjMy0zYzdiLTQ5NDItYmUwMy1kMTMyNWY4MjAzMzYucG5nIn1dXSwiYXVkIjpbInVybjpzZXJ2aWNlOmZpbGUuZG93bmxvYWQiXX0.bAKuGGsN-TGX_IoBwHZrzG5e7NNFJVg8Voo6wYoco-M" alt=""> -->
   <canvas id="game" width="320" height="192"></canvas>
   <script src="libs/kontra.js"></script>
   <script src="scripts/render-queue.js"></script>
@@ -46,6 +36,7 @@
   <script src="scripts/tileset.js"></script>
   <script src="scripts/lvl1.js"></script>
   <script src="scripts/main-character.js"></script>
+  <script src="scripts/clone.js"></script>
 </body>
 
 </html>
