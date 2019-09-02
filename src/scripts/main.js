@@ -28,16 +28,13 @@ let loop = GameLoop({
         }
         for (let j = 0; j < door.doors.length; j++) {
           const singleDoor = door.doors[j];
-          // console.log(singleDoor)
           let tile = singleDoor.tileOn;
           if (steping) {
             tile = singleDoor.tileOn
           } else {
             tile = singleDoor.tileOff
           }
-          tileEngine.setTileAtLayer("lvl1", { row: singleDoor.y, col: singleDoor.x }, tile)
-          console.log(tileEngine.tileAtLayer("lvl1", { row: singleDoor.y, col: singleDoor.x }))
-
+          tileEngine.setTileAtLayer("lvl" + (currentLvl + 1), { row: singleDoor.y, col: singleDoor.x }, tile)
         }
       }
     }
@@ -77,13 +74,8 @@ let loop = GameLoop({
 
   },
   render: function () {
-    // renderQueue.background.forEach(element => {
-    //   // element.obj.renderLayer("lvl1");
-    //   element.obj.render()
-    // });
     if (tileEngine) {
-      // tileEngine.renderLayer("lvl1");
-      tileEngine.render();
+      tileEngine.renderLayer("lvl" + (currentLvl + 1));
     }
     renderQueue.sprite.forEach(element => {
       element.obj.render();
