@@ -1,4 +1,4 @@
-var kontra = (function () {
+﻿var kontra = (function () {
 'use strict';
 
 /**
@@ -3356,7 +3356,7 @@ function TileEngine(properties = {}) {
       let canvas = layerCanvases[name];
       let layer = layerMap[name];
 
-      if (!canvas) {
+      //if (!canvas) {
         // cache the rendered layer so we can render it again without redrawing
         // all tiles
         canvas = document.createElement('canvas');
@@ -3365,7 +3365,7 @@ function TileEngine(properties = {}) {
 
         layerCanvases[name] = canvas;
         tileEngine._r(layer, canvas.getContext('2d'));
-      }
+      //}
 
       render(canvas);
     },
