@@ -1,4 +1,3 @@
-let { TileEngine } = kontra
 let tileEngine;
 let img = new Image();
 img.src = 'assets/Maytch 16x16 Tilesets/tilesheet_grass.png';

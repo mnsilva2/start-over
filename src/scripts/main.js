@@ -1,4 +1,4 @@
-let { init, Sprite, GameLoop, initKeys, keyPressed, SpriteSheet, Animation } = kontra
+let { init, Sprite, GameLoop, initKeys, keyPressed, SpriteSheet, Animation, TileEngine } = kontra
 
 let { canvas } = init();
 
@@ -10,10 +10,39 @@ let clone = [];
 let numOfClones = 0;
 let loop = GameLoop({
   update: function () {
-    renderQueue.background.forEach(element => {
-      // element.obj.update();
-    });
+    if (tileEngine) {
+      for (let i = 0; i < levels[currentLvl].doors.length; i++) {
+        const door = levels[currentLvl].doors[i];
+        let steping = false;
+        for (let j = 0; j < renderQueue.sprite.length; j++) {
+          const clone = renderQueue.sprite[i];
+          if (Math.round(clone.x / 16) === door.switch.x && Math.round(clone.y / 16) && door.switch.y) {
+            steping = true;
+            break;
+          }
+        }
+        if (!steping && mainCharacter) {
+          if (Math.round(mainCharacter.x / 16) === door.switch.x && Math.round(mainCharacter.y / 16) && door.switch.y) {
+            steping = true;
+          }
+        }
+        for (let j = 0; j < door.doors.length; j++) {
+          const singleDoor = door.doors[j];
+          // console.log(singleDoor)
+          let tile = singleDoor.tileOn;
+          if (steping) {
+            tile = singleDoor.tileOn
+          } else {
+            tile = singleDoor.tileOff
+          }
+          tileEngine.setTileAtLayer("lvl1", { row: singleDoor.y, col: singleDoor.x }, tile)
+          console.log(tileEngine.tileAtLayer("lvl1", { row: singleDoor.y, col: singleDoor.x }))
+
+        }
+      }
+    }
     renderQueue.sprite.forEach(element => {
+      element.obj.move();
       element.obj.update();
     });
     if (typeof mainCharacter !== undefined) {
@@ -48,13 +77,16 @@ let loop = GameLoop({
 
   },
   render: function () {
-    renderQueue.background.forEach(element => {
-      element.obj.renderLayer("lvl" + (currentLvl + 1));
-      // element.obj.render()
-    });
+    // renderQueue.background.forEach(element => {
+    //   // element.obj.renderLayer("lvl1");
+    //   element.obj.render()
+    // });
+    if (tileEngine) {
+      // tileEngine.renderLayer("lvl1");
+      tileEngine.render();
+    }
     renderQueue.sprite.forEach(element => {
       element.obj.render();
-      element.obj.move();
     });
 
     if (typeof mainCharacter !== undefined) {

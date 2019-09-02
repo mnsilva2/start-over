@@ -40,7 +40,7 @@ mainCharacter = Sprite({
 
     move: () => {
         if (keyPressed('d') || keyPressed('right')) {
-            // mainCharacter.playAnimation('walk')
+            mainCharacter.playAnimation('walk')
             if (mainCharacter.isHittingSolid(levels[currentLvl].lvl).right) {
                 mainCharacter.currentSpeed = 0;
                 mainCharacter.alignRight();
@@ -162,10 +162,6 @@ mainCharacter = Sprite({
         self.x = Math.round(self.x);
     },
     isInEndSpot: function () {
-        // console.log("Math.round(this.x)", Math.round(this.x));
-        // console.log("levels[currentLvl].end.x", levels[currentLvl].end.x);
-        // console.log("Math.round(this.y)", Math.round(this.y));
-        // console.log("levels[currentLvl].end.y", levels[currentLvl].end.y);
         return (Math.round(this.x) === levels[currentLvl].end.x * 16 && Math.round(this.y) && levels[currentLvl].end.y * 16)
 
 
