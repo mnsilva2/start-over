@@ -15,11 +15,14 @@ var htmlmin = require('gulp-htmlmin');
 var less = require('gulp-less');
 var micro = require('gulp-micro');
 var size = require('gulp-size');
-var uglify = require('gulp-uglify');
+let uglify = require('gulp-uglify-es').default;
 var zip = require('gulp-zip');
 var source = require('vinyl-source-stream');
 var sourcemaps = require('gulp-sourcemaps');
 var ignore = require('gulp-ignore')
+
+
+
 program.on('--help', function () {
   console.log('  Tasks:');
   console.log();
@@ -40,23 +43,17 @@ var prod = !!program.prod;
 
 gulp.task('default', ['build']);
 gulp.task('build', ['build_source', 'build_index', 'build_styles'], function () {
-  // return gulp.src('build/*')
-  //   .pipe(zip('archive.zip'))
-  //   .pipe(size())
-  //   // .pipe(micro({ limit: 13 * 1024 }))
-  //   .pipe(gulp.dest('dist'));
 });
 
 gulp.task('build_source', function () {
-  // var bundler = browserify('./src/scripts/main', { debug: !prod });
+  var bundler = browserify('./src/scripts/main', { debug: !prod });
   var bundler = browserify({
     entries: [
-      './src/libs/kontra.min',
+      './src/libs/kontra',
       './src/scripts/main',
       './src/scripts/main-character',
       './src/scripts/render-queue',
       './src/scripts/tileset',
-
     ],
     debug: !prod
   });
@@ -71,7 +68,9 @@ gulp.task('build_source', function () {
     .pipe(buffer())
     .pipe(sourcemaps.init({ loadMaps: true }))
     .pipe(ignore.exclude(["**/*.map"]))
-    // .pipe(gulpif(prod, uglify()))
+    .pipe(gulpif(prod, uglify())).on('error', function (e) {
+      console.log(e);
+    })
     .pipe(gulp.dest('build'));
 
 });
