@@ -32,7 +32,7 @@ mainCharacter = Sprite({
     color: 'red',
     width: 16,
     height: 32,
-    animations: spriteSheet.animations,
+    // animations: spriteSheet.animations,
     isJumping: false,
     isFalling: true,
     jumpIndex: 0,
@@ -40,7 +40,7 @@ mainCharacter = Sprite({
 
     move: () => {
         if (keyPressed('d') || keyPressed('right')) {
-            mainCharacter.playAnimation('walk')
+            // mainCharacter.playAnimation('walk')
             if (mainCharacter.isHittingSolid(levels[currentLvl].lvl).right) {
                 mainCharacter.currentSpeed = 0;
                 mainCharacter.alignRight();
@@ -55,7 +55,7 @@ mainCharacter = Sprite({
             }
         }
         if (keyPressed('a') || keyPressed('left')) {
-            mainCharacter.playAnimation('walk')
+            // mainCharacter.playAnimation('walk')
 
             if (mainCharacter.isHittingSolid(levels[currentLvl].lvl).left) {
                 mainCharacter.currentSpeed = 0;
@@ -75,7 +75,7 @@ mainCharacter = Sprite({
         mainCharacter.x += mainCharacter.currentSpeed;
 
         if (!keyPressed('a') && !keyPressed('left') && !keyPressed('d') && !keyPressed('right')) {
-            mainCharacter.playAnimation('idle')
+            // mainCharacter.playAnimation('idle')
             if (mainCharacter.currentSpeed < 0.1 && mainCharacter.currentSpeed > -0.1) {
                 mainCharacter.currentSpeed = 0
                 mainCharacter.centerPixel()

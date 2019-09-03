@@ -34,14 +34,14 @@ let levels = [
                     {
                         x: 09,
                         y: 04,
-                        tileOff: 1,
-                        tileOn: 2
+                        tileOff: 20,
+                        tileOn: 0
                     },
                     {
                         x: 09,
                         y: 03,
-                        tileOff: 1,
-                        tileOn: 2
+                        tileOff: 4,
+                        tileOn: 0
                     }
                 ]
             }

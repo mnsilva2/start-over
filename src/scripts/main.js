@@ -16,7 +16,7 @@ let loop = GameLoop({
         let steping = false;
         for (let j = 0; j < renderQueue.sprite.length; j++) {
           const clone = renderQueue.sprite[i];
-          if (Math.round(clone.x / 16) === door.switch.x && Math.round(clone.y / 16) && door.switch.y) {
+          if (Math.round(clone.obj.x / 16) === door.switch.x && Math.round(clone.obj.y / 16) && door.switch.y) {
             steping = true;
             break;
           }
