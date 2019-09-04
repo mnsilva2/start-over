@@ -68,7 +68,7 @@ gulp.task('build_source', function () {
     .pipe(buffer())
     .pipe(sourcemaps.init({ loadMaps: true }))
     .pipe(ignore.exclude(["**/*.map"]))
-    .pipe(gulpif(prod, uglify())).on('error', function (e) {
+    .pipe(gulpif(prod, uglify({ compress: { drop_console: true } }))).on('error', function (e) {
       console.log(e);
     })
     .pipe(gulp.dest('build'));

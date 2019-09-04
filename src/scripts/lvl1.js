@@ -40,6 +40,12 @@ let levels = [
                     {
                         x: 09,
                         y: 03,
+                        tileOff: 20,
+                        tileOn: 0
+                    },
+                    {
+                        x: 09,
+                        y: 02,
                         tileOff: 4,
                         tileOn: 0
                     }
