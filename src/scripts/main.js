@@ -2,7 +2,6 @@ let { init, Sprite, GameLoop, initKeys, keyPressed, SpriteSheet, Animation, Tile
 
 let { canvas } = init();
 
-
 initKeys();
 let currentLvl = 0;
 let mainCharacter = undefined;
@@ -62,11 +61,9 @@ let loop = GameLoop({
         clone.push({ x: mainCharacter.x, y: mainCharacter.y });
       }
 
-
       //end level
       if (mainCharacter.isInEndSpot()) {
         nextLevel();
-
       }
 
       mainCharacter.update();
@@ -76,11 +73,11 @@ let loop = GameLoop({
   render: function () {
     if (tileEngine) {
       tileEngine.renderLayer("lvl" + (currentLvl + 1));
-    }
-    renderQueue.sprite.forEach(element => {
-      element.obj.render();
-    });
 
+      renderQueue.sprite.forEach(element => {
+        element.obj.render();
+      });
+    }
     if (typeof mainCharacter !== undefined) {
       mainCharacter.render();
     }
@@ -95,8 +92,12 @@ function resize() {
 
   if (scaleAmountY > scaleAmountX) {
     document.getElementById("game").style.transform = "scale(" + scaleAmountX + ") translateZ(0)";
+    document.getElementById("container").style.width = (320 * scaleAmountX) + "px"
+    document.getElementById("container").style.height = (192 * scaleAmountX) + "px"
   } else {
     document.getElementById("game").style.transform = "scale(" + scaleAmountY + ") translateZ(0)";
+    document.getElementById("container").style.width = (320 * scaleAmountY) + "px"
+    document.getElementById("container").style.height = (192 * scaleAmountY) + "px"
   }
 
 }
@@ -106,5 +107,6 @@ function nextLevel() {
   numOfClones = 0;
   mainCharacter.x = levels[currentLvl].spawns[numOfClones].x;
   mainCharacter.x = levels[currentLvl].spawns[numOfClones].y;
+  document.getElementById("hint").innerText = levels[currentLvl].text;
 
 }

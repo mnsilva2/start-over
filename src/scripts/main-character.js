@@ -4,18 +4,15 @@ const bg = [0, 11, 12, 13, 14, 15, 16, 27, 28, 29, 30, 31, 32]
 const MAX_SPEED = 2;
 const ACCELARATION = 0.1
 const DRAG = 0.8
-
 const MAX_HEIGHT_JUMP = 20;
 const MIN_HEIGHT_JUMP = 10;
 
 let image = new Image();
-
 let spriteSheet = SpriteSheet({
     image: image,
     frameWidth: 72,
     frameHeight: 97,
     animations: {
-        // create a named animation: walk
         walk: {
             frames: '0..9',  // frames 0 through 9
             frameRate: 30
@@ -29,8 +26,8 @@ let spriteSheet = SpriteSheet({
 
 
 mainCharacter = Sprite({
-    x: 32,
-    y: 0,
+    x: levels[currentLvl].spawns[0].x * 16,
+    y: levels[currentLvl].spawns[0].y * 16,
     color: 'red',
     width: 16,
     height: 32,
@@ -49,8 +46,8 @@ mainCharacter = Sprite({
 
             if (mainCharacter.isHittingSolid(levels[currentLvl].lvl).right) {
                 mainCharacter.currentSpeed = mainCharacter.currentSpeed / 2;
-                mainCharacter.alignRight();
                 mainCharacter.x = oldX;
+
             } else {
                 let changeDirectionModifier = 1
                 if (mainCharacter.currentSpeed < 0) {
@@ -67,9 +64,9 @@ mainCharacter = Sprite({
             mainCharacter.x += mainCharacter.currentSpeed;
 
             if (mainCharacter.isHittingSolid(levels[currentLvl].lvl).left) {
-                mainCharacter.currentSpeed = 0;
-                mainCharacter.alignLeft();
+                mainCharacter.currentSpeed = mainCharacter.currentSpeed / 2;
                 mainCharacter.x = oldX;
+
 
             } else {
                 let changeDirectionModifier = 1
@@ -81,7 +78,16 @@ mainCharacter = Sprite({
                 }
             }
         }
+        if (mainCharacter.isHittingSolid(levels[currentLvl].lvl).left) {
+            mainCharacter.alignLeft();
+        }
+        if (mainCharacter.isHittingSolid(levels[currentLvl].lvl).right) {
+            mainCharacter.alignRight();
+        }
 
+        if (mainCharacter.currentSpeed < 0.1 && mainCharacter.currentSpeed > -0.1) {
+            mainCharacter.currentSpeed = 0
+        }
         if (!keyPressed('a') && !keyPressed('left') && !keyPressed('d') && !keyPressed('right')) {
             // mainCharacter.playAnimation('idle')
             let oldX = mainCharacter.x;
@@ -97,12 +103,11 @@ mainCharacter = Sprite({
             }
         }
 
-
-        console.log(mainCharacter.isFalling)
         if (mainCharacter.isFalling) {
             mainCharacter.y += (mainCharacter.jumpIndex ** 2) * 0.01
             if (mainCharacter.jumpIndex > -30)
                 mainCharacter.jumpIndex--;
+
             if (mainCharacter.isHittingSolid(levels[currentLvl].lvl).down) {
                 mainCharacter.isFalling = false;
                 mainCharacter.alignDown();
@@ -135,23 +140,24 @@ mainCharacter = Sprite({
         }
     },
     isHittingSolid: (lvl) => {
-        let letgridXLeft, letgridXRight;
+        let letgridXLeft, letgridXRight, currentAccelaration = 0;
         let hitting = {
             left: false,
             right: false,
             down: false
         }
         let self = mainCharacter;
-        if (mainCharacter.currentSpeed > 0) {
-            letgridXLeft = Math.floor((self.x + (mainCharacter.currentSpeed)) / 16);
-            letgridXRight = Math.floor((self.x + self.width + (mainCharacter.currentSpeed)) / 16);
-        } else {
-            letgridXLeft = Math.floor((self.x - (mainCharacter.currentSpeed)) / 16);
-            letgridXRight = Math.floor((self.x + self.width - (mainCharacter.currentSpeed)) / 16);
-
+        if (mainCharacter.currentSpeed !== 0) {
+            currentAccelaration = ACCELARATION;
         }
-        // letgridXLeft = Math.ROU((self.x + (mainCharacter.currentSpeed + ACCELARATION)) / 16);
-        // letgridXRight = Math.floor((self.x + self.width + (mainCharacter.currentSpeed + ACCELARATION)) / 16);
+        if (mainCharacter.currentSpeed > 0) {
+            letgridXLeft = Math.floor((self.x + (mainCharacter.currentSpeed + currentAccelaration)) / 16);
+            letgridXRight = Math.floor((self.x + self.width + (mainCharacter.currentSpeed + currentAccelaration)) / 16);
+        } else {
+            letgridXLeft = Math.floor((self.x + (mainCharacter.currentSpeed - currentAccelaration)) / 16);
+            letgridXRight = Math.floor((self.x + self.width + (mainCharacter.currentSpeed - currentAccelaration)) / 16);
+        }
+
         let gridY = Math.floor(self.y / 16 + 1);
         if (walls.includes(lvl[gridY * 20 + letgridXRight]) || letgridXRight == 20) {
             hitting.right = true;
@@ -163,23 +169,24 @@ mainCharacter = Sprite({
         ) {
             hitting.down = true;
         }
+
         return hitting;
     },
     alignDown: () => {
         let self = mainCharacter;
-        self.y = Math.floor(self.y / 16) * 16;
+        self.y = Math.round(self.y / 16) * 16;
     },
     alignLeft: () => {
         let self = mainCharacter;
-        // self.x = (Math.round(self.x / 16) * 16) + 1;
+        self.x = (Math.round(self.x / 16) * 16);
     },
     alignRight: () => {
         let self = mainCharacter;
-        self.x = (Math.round(self.x / 16) * 16) - 1;
+        // self.x = (Math.round(self.x / 16) * 16);
     },
     centerPixel: () => {
         let self = mainCharacter;
-        // self.x = Math.round(self.x);
+        self.x = Math.round(self.x);
     },
     isInEndSpot: function () {
         return (Math.round(this.x) === levels[currentLvl].end.x * 16 && Math.round(this.y) && levels[currentLvl].end.y * 16)

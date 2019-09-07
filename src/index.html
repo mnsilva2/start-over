@@ -2,13 +2,16 @@
 <html>
 
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Start Over</title>
   <style>
     body {
       background: black;
       margin: 0;
+    }
+
+    #container {
+      margin: auto;
+      position: relative;
     }
 
     #game {
@@ -18,25 +21,35 @@
       transform-origin: top;
       backface-visibility: hidden;
       transform: translateZ(0);
-      -webkit-font-smoothing: subpixel-antialiased;
-    }
-
-    canvas {
       image-rendering: crisp-edges;
       image-rendering: pixelated;
+    }
+
+    p {
+      position: absolute;
+      z-index: 1;
+      font-size: 2rem;
+      font-family: monospace;
+      width: calc(100% - 2rem);
+      margin: 1rem;
     }
   </style>
 </head>
 
 <body onload="resize()" onresize="resize()">
-  <canvas id="game" width="320" height="192"></canvas>
+  <div id="container">
+    <p id="hint">Welcome to Start over, your goal is to reach the chest in the end of the level.</p>
+    <canvas id="game" width="320" height="192">
+    </canvas>
+  </div>
   <script src="libs/kontra.js"></script>
   <script src="scripts/render-queue.js"></script>
   <script src="scripts/main.js"></script>
   <script src="scripts/tileset.js"></script>
-  <script src="scripts/lvl1.js"></script>
+  <script src="scripts/levels.js"></script>
   <script src="scripts/main-character.js"></script>
   <script src="scripts/clone.js"></script>
+
 </body>
 
 </html>
