@@ -110,3 +110,11 @@ function nextLevel() {
   document.getElementById("hint").innerText = levels[currentLvl].text;
 
 }
+
+function repeatArray(array, times) {
+  merged = array;
+  for (let i = 0; i < times; i++) {
+    merged = merged.concat(array)
+  }
+  return merged;
+}
