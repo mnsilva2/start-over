@@ -56,7 +56,7 @@ let loop = GameLoop({
       }
 
       mainCharacter.move();
-
+      mainCharacter.updateAnimation();
       if (numOfClones < levels[currentLvl].spawns.length - 1) {
         clone.push({ x: mainCharacter.x, y: mainCharacter.y });
       }
