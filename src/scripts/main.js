@@ -5,7 +5,7 @@ let { canvas } = init();
 initKeys();
 let cl = 0;
 let mc = undefined;
-let clone = [];
+let cloneArray = [];
 let nC = 0;
 let loop = GameLoop({
   update: function () {
@@ -14,7 +14,7 @@ let loop = GameLoop({
         const door = lv[cl].doors[i];
         let steping = false;
         for (let j = 0; j < rQ.sprite.length; j++) {
-          const clone = rQ.sprite[i];
+          const clone = rQ.sprite[j];
           if (Math.round(clone.x / 16) === door.switch.x && Math.round(clone.y / 16) && door.switch.y) {
             steping = true;
             break;
@@ -43,16 +43,14 @@ let loop = GameLoop({
 
     });
     if (typeof mc !== "undefined") {
-      let oldX = mc.x
-      let oldY = mc.y
       if (keyPressed("space") && nC < lv[cl].spawns.length - 1) {
-        if (clone.length > 30) {
-          createClone(clone);
-          clone = []
+        console.log("in", cloneArray)
+        if (cloneArray.length > 30) {
+          createClone(cloneArray);
+          cloneArray = []
           nC++;
           mc.x = lv[cl].spawns[nC].x;
           mc.x = lv[cl].spawns[nC].y;
-
         }
       }
 
@@ -61,7 +59,7 @@ let loop = GameLoop({
       let td = mc.td;
       mc.playAnimation(animation)
       if (nC < lv[cl].spawns.length - 1) {
-        clone.push({ x: mc.x, y: mc.y, animation: animation, td: td });
+        cloneArray.push({ x: mc.x, y: mc.y, animation: animation, td: td });
       }
 
       //end level
@@ -101,26 +99,24 @@ let loop = GameLoop({
 });
 
 loop.start();
-window.addEventListener("resize", resize);
-window.onload = resize();
 function resize() {
   let scaleAmountY = Math.floor(window.innerHeight / 192);
   let scaleAmountX = Math.floor(window.innerWidth / 320);
 
   if (scaleAmountY > scaleAmountX) {
     $("game").style.transform = "scale(" + scaleAmountX + ") translateZ(0)";
-    $("container").style.width = (320 * scaleAmountX) + "px"
-    $("container").style.height = (192 * scaleAmountX) + "px"
+    $("c").style.width = (320 * scaleAmountX) + "px"
+    $("c").style.height = (192 * scaleAmountX) + "px"
   } else {
     $("game").style.transform = "scale(" + scaleAmountY + ") translateZ(0)";
-    $("container").style.width = (320 * scaleAmountY) + "px"
-    $("container").style.height = (192 * scaleAmountY) + "px"
+    $("c").style.width = (320 * scaleAmountY) + "px"
+    $("c").style.height = (192 * scaleAmountY) + "px"
   }
 
 }
 function nextLevel() {
   cl++;
-  clone = [];
+  cloneArray = [];
   nC = 0;
   rQ.sprite = []
   mc.x = lv[cl].spawns[nC].x * 16;

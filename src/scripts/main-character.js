@@ -1,16 +1,10 @@
 const walls = [1, 3, 4, 6, 8, 9,]
 const bg = [0, 10, 11, 12, 13, 14, 15]
 
-const MAX_SPEED = 1.3;
-const ACCELARATION = 0.1
-const DRAG = 0.8
-const MAX_HEIGHT_JUMP = 20;
-const MIN_HEIGHT_JUMP = 10;
-const MAIN_CHARACTER_WIDTH = 16;
 let image = new Image();
 image.src = "./animations.png"
 let spriteSheet;
-
+let kp = keyPressed
 image.onload = function () {
     spriteSheet = SpriteSheet({
         image: image,
@@ -101,8 +95,8 @@ image.onload = function () {
                     if (mc.cs < 0) {
                         changeDirectionModifier = 1.5
                     }
-                    if (mc.cs < MAX_SPEED) {
-                        mc.cs = mc.cs + ACCELARATION * changeDirectionModifier;
+                    if (mc.cs < 1.3) {
+                        mc.cs = mc.cs + 0.1 * changeDirectionModifier;
                     }
                 }
             }
@@ -122,8 +116,8 @@ image.onload = function () {
                     if (mc.cs > 0) {
                         changeDirectionModifier = 1.5
                     }
-                    if (mc.cs > -MAX_SPEED) {
-                        mc.cs = mc.cs - ACCELARATION * changeDirectionModifier;
+                    if (mc.cs > -1.3) {
+                        mc.cs = mc.cs - 0.1 * changeDirectionModifier;
                     }
                 }
             }
@@ -143,7 +137,7 @@ image.onload = function () {
                     mc.cs = 0
                     mc.centerPixel()
                 } else {
-                    mc.cs = mc.cs * DRAG
+                    mc.cs = mc.cs * 0.8
                     mc.x += mc.cs;
                 }
                 if (mc.ihs(lv[cl].lvl).left || mc.ihs(lv[cl].lvl).right) {
@@ -164,7 +158,7 @@ image.onload = function () {
                 if (mc.iJ) {
                     mc.sIA = true;
                     mc.y -= (mc.ji ** 2) * 0.01
-                    if ((keyPressed('w') || keyPressed('up')) && mc.ji > MIN_HEIGHT_JUMP) {
+                    if ((keyPressed('w') || keyPressed('up')) && mc.ji > 10) {
                         mc.ji -= .75;
                     } else {
                         mc.ji -= 5;
@@ -178,7 +172,7 @@ image.onload = function () {
                 } else {
                     if ((keyPressed('w') || keyPressed('up')) && !(mc.sIA)) {
                         mc.iJ = true;
-                        mc.ji = MAX_HEIGHT_JUMP
+                        mc.ji = 20
                         mc.sIA = true
                     }
                     if (!mc.ihs(lv[cl].lvl).down) {
@@ -241,7 +235,7 @@ image.onload = function () {
             }
             let self = mc;
             if (mc.cs !== 0) {
-                currentAccelaration = ACCELARATION;
+                currentAccelaration = 0.1;
             }
             let extra = 0
             if (extraSpace) {
@@ -249,10 +243,10 @@ image.onload = function () {
             }
             if (mc.cs > 0) {
                 letgridXLeft = Math.floor((self.x - extra + (mc.cs + currentAccelaration)) / 16);
-                letgridXRight = Math.floor((self.x + extra + MAIN_CHARACTER_WIDTH + (mc.cs + currentAccelaration)) / 16);
+                letgridXRight = Math.floor((self.x + extra + 16 + (mc.cs + currentAccelaration)) / 16);
             } else {
                 letgridXLeft = Math.floor((self.x + 1 - extra + (mc.cs - currentAccelaration)) / 16);
-                letgridXRight = Math.floor((self.x + extra + MAIN_CHARACTER_WIDTH + (mc.cs - currentAccelaration)) / 16);
+                letgridXRight = Math.floor((self.x + extra + 16 + (mc.cs - currentAccelaration)) / 16);
             }
 
             let gridY = Math.floor(self.y / 16 + 1);
