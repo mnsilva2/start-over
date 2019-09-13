@@ -8,6 +8,7 @@ function createClone(positions) {
         positions: positions,
         currentPosition: 0,
         goingBackwards: false,
+        animations: spriteSheet.animations,
         move: function () {
             if (!this.goingBackwards) {
                 if (this.currentPosition >= this.positions.length + 30) {
@@ -17,20 +18,28 @@ function createClone(positions) {
                     if (this.currentPosition < this.positions.length) {
                         this.x = this.positions[this.currentPosition].x;
                         this.y = this.positions[this.currentPosition].y;
+                        this.playAnimation(this.positions[this.currentPosition].animation);
+                        if (this.positions[this.currentPosition].turnDirection == 1) {
+                            this.width = 16;
+                        } else {
+                            this.width = -16;
+                        }
                     }
                     this.currentPosition++;
 
                 }
             } else {
+
                 if (this.currentPosition <= 0) {
                     this.goingBackwards = false;
                     this.currentPosition = 0;
                 } else {
                     this.x = this.positions[this.currentPosition].x;
                     this.y = this.positions[this.currentPosition].y;
+                    this.playAnimation("recall");
                     this.currentPosition -= 10;
                 }
             }
         }
-    }), RENDER_QUEUE_TYPES.SPRITE, null)
+    }))
 }

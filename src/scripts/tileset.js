@@ -1,6 +1,6 @@
 let tileEngine;
 let img = new Image();
-img.src = 'assets/Maytch 16x16 Tilesets/tilesheet_grass.png';
+img.src = './tilesheet.png';
 img.onload = function () {
     layers = []
     for (let i = 0; i < levels.length; i++) {
@@ -8,6 +8,7 @@ img.onload = function () {
             name: "lvl" + (i + 1),
             data: addClouds(levels[i].lvl)
         })
+
     }
 
     tileEngine = TileEngine({
@@ -28,11 +29,9 @@ img.onload = function () {
         // layer object
         layers: layers
     });
-
-    addToRenderQueue(tileEngine, RENDER_QUEUE_TYPES.BACKGROUND, {})
 }
 
-const clouds = [[11, 12], [13, 14], [15, 16]]
+const cloud = [14, 15]
 function addClouds(lvl) {
     for (let i = 0; i < lvl.length; i++) {
         const tile = lvl[i];
@@ -45,10 +44,9 @@ function addClouds(lvl) {
 
             switch (tile) {
                 case 0:
-                    if (Math.random() > 0.9) {
-                        let cloud = Math.floor(Math.random() * 3);
-                        lvl[i] = clouds[cloud][0];
-                        lvl[i + 1] = clouds[cloud][1];
+                    if (Math.random() > 0.96) {
+                        lvl[i] = cloud[0];
+                        lvl[i + 1] = cloud[1];
 
                     }
                     break;

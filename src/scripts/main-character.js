@@ -1,5 +1,5 @@
-const walls = [1, 3, 4, 20, 17, 19,]
-const bg = [0, 11, 12, 13, 14, 15, 16, 27, 28, 29, 30, 31, 32]
+const walls = [1, 3, 4, 6, 8, 9,]
+const bg = [0, 10, 11, 12, 13, 14, 15]
 
 const MAX_SPEED = 1.3;
 const ACCELARATION = 0.1
@@ -9,10 +9,10 @@ const MIN_HEIGHT_JUMP = 10;
 const MAIN_CHARACTER_WIDTH = 16;
 let image = new Image();
 image.src = "./animations.png"
-
+let spriteSheet;
 
 image.onload = function () {
-    let spriteSheet = SpriteSheet({
+    spriteSheet = SpriteSheet({
         image: image,
         frameWidth: 16,
         frameHeight: 32,
@@ -48,13 +48,23 @@ image.onload = function () {
                 frameRate: 1,
                 loop: true
             },
-            standWall: {
+            runFall: {
                 frames: [12],
                 frameRate: 1,
                 loop: true
             },
-            jumpWall: {
+            standWall: {
                 frames: [13],
+                frameRate: 1,
+                loop: true
+            },
+            jumpWall: {
+                frames: [14],
+                frameRate: 1,
+                loop: true
+            },
+            recall: {
+                frames: [15],
                 frameRate: 1,
                 loop: true
             }
@@ -74,6 +84,7 @@ image.onload = function () {
         jumpIndex: 0,
         currentSpeed: 0,
         turnDirection: 0, //0 Right 1 Left
+        stillInAir: false,
 
         move: () => {
             if (keyPressed('d') || keyPressed('right')) {
@@ -140,18 +151,19 @@ image.onload = function () {
                     mainCharacter.x = oldX;
                 }
             }
-
             if (mainCharacter.isFalling) {
                 mainCharacter.y += (mainCharacter.jumpIndex ** 2) * 0.01
-                if (mainCharacter.jumpIndex > -30)
+                mainCharacter.stillInAir = true;
+                if (mainCharacter.jumpIndex > -30) {
                     mainCharacter.jumpIndex--;
-
+                }
                 if (mainCharacter.isHittingSolid(levels[currentLvl].lvl).down) {
                     mainCharacter.isFalling = false;
                     mainCharacter.alignDown();
                 }
             } else {
                 if (mainCharacter.isJumping) {
+                    mainCharacter.stillInAir = true;
                     mainCharacter.y -= (mainCharacter.jumpIndex ** 2) * 0.01
                     if ((keyPressed('w') || keyPressed('up')) && mainCharacter.jumpIndex > MIN_HEIGHT_JUMP) {
                         mainCharacter.jumpIndex -= .75;
@@ -165,48 +177,57 @@ image.onload = function () {
                         mainCharacter.isJumping = false;
                     }
                 } else {
-                    if (keyPressed('w') || keyPressed('up')) {
+                    if ((keyPressed('w') || keyPressed('up')) && !(mainCharacter.stillInAir)) {
                         mainCharacter.isJumping = true;
                         mainCharacter.jumpIndex = MAX_HEIGHT_JUMP
+                        mainCharacter.stillInAir = true
                     }
                     if (!mainCharacter.isHittingSolid(levels[currentLvl].lvl).down) {
                         mainCharacter.isFalling = true;
                         mainCharacter.jumpIndex = 0;
                     }
-
+                    if (!keyPressed('w') && !keyPressed('up')) {
+                        mainCharacter.stillInAir = false;
+                    }
                 }
             }
         },
         updateAnimation: () => {
             let hitting = mainCharacter.isHittingSolid(levels[currentLvl].lvl, true)
-            if (keyPressed('a') || keyPressed('left') || keyPressed('d') || keyPressed('right')) {
+            if ((hitting.left && mainCharacter.turnDirection === 1) ||
+                hitting.right && mainCharacter.turnDirection === 0) {
                 if (mainCharacter.isJumping || mainCharacter.isFalling) {
-                    mainCharacter.playAnimation("runJump");
+                    return ("jumpWall");
                 } else {
-                    if ((mainCharacter.turnDirection === 0 && mainCharacter.currentSpeed < -0.1) ||
-                        (mainCharacter.turnDirection === 1 && mainCharacter.currentSpeed > 0.1)) {
-                        mainCharacter.playAnimation("turn");
-                    } else {
-                        mainCharacter.playAnimation("run");
-                    }
+                    return ("standWall");
+
                 }
             } else {
-                if ((hitting.left && mainCharacter.turnDirection === 1) ||
-                    hitting.right && mainCharacter.turnDirection === 0) {
-                    if (mainCharacter.isJumping || mainCharacter.isFalling) {
-                        mainCharacter.playAnimation("jumpWall");
-                    } else {
-                        mainCharacter.playAnimation("standWall");
-
-                    }
-                } else {
+                if (keyPressed('a') || keyPressed('left') || keyPressed('d') || keyPressed('right')) {
                     if (mainCharacter.isJumping) {
-                        mainCharacter.playAnimation("standJump");
+                        return "runJump";
+
                     } else {
                         if (mainCharacter.isFalling) {
-                            mainCharacter.playAnimation("standFall");
+                            return "runFall";
                         } else {
-                            mainCharacter.playAnimation("idle");
+                            if ((mainCharacter.turnDirection === 0 && mainCharacter.currentSpeed < -0.1) ||
+                                (mainCharacter.turnDirection === 1 && mainCharacter.currentSpeed > 0.1)) {
+                                return ("turn");
+                            } else {
+                                return ("run");
+                            }
+                        }
+                    }
+                } else {
+
+                    if (mainCharacter.isJumping) {
+                        return ("standJump");
+                    } else {
+                        if (mainCharacter.isFalling) {
+                            return ("standFall");
+                        } else {
+                            return ("idle");
                         }
                     }
                 }
@@ -231,7 +252,7 @@ image.onload = function () {
                 letgridXLeft = Math.floor((self.x - extra + (mainCharacter.currentSpeed + currentAccelaration)) / 16);
                 letgridXRight = Math.floor((self.x + extra + MAIN_CHARACTER_WIDTH + (mainCharacter.currentSpeed + currentAccelaration)) / 16);
             } else {
-                letgridXLeft = Math.floor((self.x - extra + (mainCharacter.currentSpeed - currentAccelaration)) / 16);
+                letgridXLeft = Math.floor((self.x + 1 - extra + (mainCharacter.currentSpeed - currentAccelaration)) / 16);
                 letgridXRight = Math.floor((self.x + extra + MAIN_CHARACTER_WIDTH + (mainCharacter.currentSpeed - currentAccelaration)) / 16);
             }
 
@@ -266,11 +287,9 @@ image.onload = function () {
             self.x = Math.round(self.x);
         },
         isInEndSpot: function () {
-            return (Math.round(this.x) === levels[currentLvl].end.x * 16 && Math.round(this.y) && levels[currentLvl].end.y * 16)
+            return (Math.round(this.x / 16) === levels[currentLvl].end.x && Math.round(this.y / 16) === levels[currentLvl].end.y)
 
 
         }
     });
-
-
 }

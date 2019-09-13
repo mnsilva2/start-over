@@ -40,11 +40,12 @@ let loop = GameLoop({
     renderQueue.sprite.forEach(element => {
       element.obj.move();
       element.obj.update();
+
     });
-    if (typeof mainCharacter !== undefined) {
+    if (typeof mainCharacter !== "undefined") {
       let oldX = mainCharacter.x
       let oldY = mainCharacter.y
-      if (keyPressed("r") && numOfClones < levels[currentLvl].spawns.length - 1) {
+      if (keyPressed("space") && numOfClones < levels[currentLvl].spawns.length - 1) {
         if (clone.length > 30) {
           createClone(clone);
           clone = []
@@ -56,9 +57,11 @@ let loop = GameLoop({
       }
 
       mainCharacter.move();
-      mainCharacter.updateAnimation();
+      let animation = mainCharacter.updateAnimation();
+      let turnDirection = mainCharacter.turnDirection;
+      mainCharacter.playAnimation(animation)
       if (numOfClones < levels[currentLvl].spawns.length - 1) {
-        clone.push({ x: mainCharacter.x, y: mainCharacter.y });
+        clone.push({ x: mainCharacter.x, y: mainCharacter.y, animation: animation, turnDirection: turnDirection });
       }
 
       //end level
@@ -67,25 +70,39 @@ let loop = GameLoop({
       }
 
       mainCharacter.update();
+      if (keyPressed("r")) {
+        reloadLevel();
+      }
     }
-
   },
   render: function () {
-    if (tileEngine) {
+    if (typeof tileEngine !== "undefined") {
       tileEngine.renderLayer("lvl" + (currentLvl + 1));
-
       renderQueue.sprite.forEach(element => {
         element.obj.render();
       });
     }
-    if (typeof mainCharacter !== undefined) {
+    let clones = renderQueue.sprite.length;
+    let spawns = levels[currentLvl].spawns.length;
+
+    if (spawns > 1) {
+      if (clones < spawns - 1) {
+        document.getElementById("clones").innerText = spawns - clones - 1 + " clone" + (spawns - clones - 1 > 1 ? "s" : "") + " left";
+      } else {
+        document.getElementById("clones").innerText = "No clones left"
+      }
+    } else {
+      document.getElementById("clones").innerText = "";
+    }
+    if (typeof mainCharacter !== "undefined") {
       mainCharacter.render();
     }
   }
 });
 
 loop.start();
-
+window.addEventListener("resize", resize);
+window.onload = resize();
 function resize() {
   let scaleAmountY = Math.floor(window.innerHeight / 192);
   let scaleAmountX = Math.floor(window.innerWidth / 320);
@@ -105,10 +122,14 @@ function nextLevel() {
   currentLvl++;
   clone = [];
   numOfClones = 0;
-  mainCharacter.x = levels[currentLvl].spawns[numOfClones].x;
-  mainCharacter.x = levels[currentLvl].spawns[numOfClones].y;
+  renderQueue.sprite = []
+  mainCharacter.x = levels[currentLvl].spawns[numOfClones].x * 16;
+  mainCharacter.y = levels[currentLvl].spawns[numOfClones].y * 16;
   document.getElementById("hint").innerText = levels[currentLvl].text;
-
+}
+function reloadLevel() {
+  currentLvl--
+  nextLevel();
 }
 
 function repeatArray(array, times) {

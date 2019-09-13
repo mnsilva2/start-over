@@ -3,42 +3,16 @@
 
 <head>
   <title>Start Over</title>
-  <style>
-    body {
-      background: black;
-      margin: 0;
-    }
-
-    #container {
-      margin: auto;
-      position: relative;
-    }
-
-    #game {
-      display: block;
-      margin: auto;
-      background: #87cefa;
-      transform-origin: top;
-      backface-visibility: hidden;
-      transform: translateZ(0);
-      image-rendering: crisp-edges;
-      image-rendering: pixelated;
-    }
-
-    p {
-      position: absolute;
-      z-index: 1;
-      font-size: 2rem;
-      font-family: monospace;
-      width: calc(100% - 2rem);
-      margin: 1rem;
-    }
-  </style>
+  <meta name="monetization" content="$coil.xrptipbot.com/duWyqKa2Sn2LR5_UO1qGbg">
+  <link rel="stylesheet" href="./style.css">
 </head>
 
 <body onload="resize()" onresize="resize()">
   <div id="container">
-    <p id="hint">Welcome to Start over, your goal is to reach the chest in the end of the level.</p>
+    <p id="hint">Welcome to Start over, your goal is to reach the chest in the end of the level. Use WASD or the arrow
+      keys to move.</p>
+    <p id="clones">No clones</p>
+
     <canvas id="game" width="320" height="192">
     </canvas>
   </div>
