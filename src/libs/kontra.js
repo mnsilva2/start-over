@@ -3819,13 +3819,11 @@
     Animation: animationFactory,
 
     imageAssets,
-    audioAssets,
     dataAssets,
     setImagePath,
     setAudioPath,
     setDataPath,
     loadImage,
-    loadAudio,
     loadData,
     load,
 
@@ -3833,38 +3831,15 @@
     getCanvas,
     getContext,
 
-    on,
-    off,
-    emit,
-
     GameLoop,
 
     keyMap,
     initKeys,
-    bindKeys,
-    unbindKeys,
     keyPressed,
 
-    registerPlugin,
-    unregisterPlugin,
-    extendObject,
-
-    initPointer,
-    pointer,
-    track,
-    untrack,
-    pointerOver,
-    onPointerDown,
-    onPointerUp,
-    pointerPressed,
-
-    Pool: poolFactory,
-    Quadtree: quadtreeFactory,
     Sprite: spriteFactory,
     SpriteSheet: spriteSheetFactory,
 
-    setStoreItem,
-    getStoreItem,
 
     TileEngine,
     Vector: vectorFactory
