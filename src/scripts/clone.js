@@ -2,7 +2,6 @@ function createClone(positions) {
     addToRenderQueue(Sprite({
         x: positions[0].x,
         y: positions[0].y,
-        color: 'red',
         width: 16,
         height: 32,
         positions: positions,
@@ -19,7 +18,7 @@ function createClone(positions) {
                         this.x = this.positions[this.currentPosition].x;
                         this.y = this.positions[this.currentPosition].y;
                         this.playAnimation(this.positions[this.currentPosition].animation);
-                        if (this.positions[this.currentPosition].turnDirection == 1) {
+                        if (this.positions[this.currentPosition].td == 1) {
                             this.width = 16;
                         } else {
                             this.width = -16;

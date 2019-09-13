@@ -15,7 +15,6 @@ body {
     transform-origin: top;
     backface-visibility: hidden;
     transform: translateZ(0);
-    image-rendering: crisp-edges;
     image-rendering: pixelated;
   }
 
@@ -30,6 +29,5 @@ body {
 
   #clones {
     width: auto;
-
     right: 0;
   }

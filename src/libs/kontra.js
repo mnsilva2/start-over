@@ -3818,13 +3818,8 @@
   let kontra = {
     Animation: animationFactory,
 
-    imageAssets,
-    dataAssets,
     setImagePath,
-    setAudioPath,
-    setDataPath,
     loadImage,
-    loadData,
     load,
 
     init,
@@ -3842,7 +3837,6 @@
 
 
     TileEngine,
-    Vector: vectorFactory
   };
 
   return kontra;

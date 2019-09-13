@@ -42,20 +42,31 @@ program
 var prod = !!program.prod;
 
 gulp.task('default', ['build']);
-gulp.task('build', ['build_source', 'build_index', 'build_styles'], function () {
+gulp.task('build', ['build_js', 'build_index', 'build_styles'], function () {
 });
 
 gulp.task('build_source', function () {
-  var bundler = browserify('./src/scripts/main', { debug: !prod });
+  // var bundler = browserify('./src/scripts/main', { debug: !prod });
   var bundler = browserify({
     entries: [
       './src/libs/kontra',
-      './src/scripts/main',
+      './src/scripts/clone',
+      './src/scripts/levels',
       './src/scripts/main-character',
+      './src/scripts/main',
       './src/scripts/render-queue',
       './src/scripts/tileset',
     ],
-    debug: !prod
+    debug: !prod,
+    noParse: [
+      './src/libs/kontra',
+      './src/scripts/clone',
+      './src/scripts/levels',
+      './src/scripts/main-character',
+      './src/scripts/main',
+      './src/scripts/render-queue',
+      './src/scripts/tileset',
+    ],
   });
   if (prod) {
     bundler.plugin(require('bundle-collapser/plugin'));
@@ -66,9 +77,9 @@ gulp.task('build_source', function () {
     .on('error', browserifyError)
     .pipe(source('build.js'))
     .pipe(buffer())
-    .pipe(sourcemaps.init({ loadMaps: true }))
-    .pipe(ignore.exclude(["**/*.map"]))
-    .pipe(gulpif(prod, uglify({ compress: { drop_console: true } }))).on('error', function (e) {
+    // .pipe(sourcemaps.init({ loadMaps: true }))
+    // .pipe(ignore.exclude(["**/*.map"]))
+    .pipe(gulpif(prod, uglify({ compress: { drop_console: false }, mangle: false }))).on('error', function (e) {
       console.log(e);
     })
     .pipe(gulp.dest('build'));
@@ -85,10 +96,29 @@ gulp.task('build_index', function () {
     .pipe(gulp.dest('build'));
 });
 
+gulp.task('build_js', function () {
+  return gulp.src('src/**/*.js')
+    .pipe(concat('build.js'))
+    .pipe(gulpif(prod, uglify({
+      compress: {
+        sequences: true,
+        dead_code: true,
+        conditionals: true,
+        booleans: true,
+        unused: true,
+        if_return: true,
+        join_vars: true,
+        drop_console: true
+      }, mangle: { reserved: [] }
+    }))).on('error', function (e) {
+      console.log(e);
+    })
+    .pipe(gulp.dest('build'));
+});
+
 gulp.task('build_styles', function () {
-  return gulp.src('src/styles.less')
-    .pipe(less())
-    .pipe(concat('build.css'))
+  return gulp.src('src/style.css')
+    .pipe(concat('style.css'))
     .pipe(gulpif(prod, cssmin()))
     .pipe(gulp.dest('build'));
 });

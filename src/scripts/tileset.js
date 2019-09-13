@@ -3,10 +3,10 @@ let img = new Image();
 img.src = './tilesheet.png';
 img.onload = function () {
     layers = []
-    for (let i = 0; i < levels.length; i++) {
+    for (let i = 0; i < lv.length; i++) {
         layers.push({
             name: "lvl" + (i + 1),
-            data: addClouds(levels[i].lvl)
+            data: addClouds(lv[i].lvl)
         })
 
     }

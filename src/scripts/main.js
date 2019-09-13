@@ -3,25 +3,25 @@ let { init, Sprite, GameLoop, initKeys, keyPressed, SpriteSheet, Animation, Tile
 let { canvas } = init();
 
 initKeys();
-let currentLvl = 0;
-let mainCharacter = undefined;
+let cl = 0;
+let mc = undefined;
 let clone = [];
-let numOfClones = 0;
+let nC = 0;
 let loop = GameLoop({
   update: function () {
     if (tileEngine) {
-      for (let i = 0; i < levels[currentLvl].doors.length; i++) {
-        const door = levels[currentLvl].doors[i];
+      for (let i = 0; i < lv[cl].doors.length; i++) {
+        const door = lv[cl].doors[i];
         let steping = false;
-        for (let j = 0; j < renderQueue.sprite.length; j++) {
-          const clone = renderQueue.sprite[i];
-          if (Math.round(clone.obj.x / 16) === door.switch.x && Math.round(clone.obj.y / 16) && door.switch.y) {
+        for (let j = 0; j < rQ.sprite.length; j++) {
+          const clone = rQ.sprite[i];
+          if (Math.round(clone.x / 16) === door.switch.x && Math.round(clone.y / 16) && door.switch.y) {
             steping = true;
             break;
           }
         }
-        if (!steping && mainCharacter) {
-          if (Math.round(mainCharacter.x / 16) === door.switch.x && Math.round(mainCharacter.y / 16) && door.switch.y) {
+        if (!steping && mc) {
+          if (Math.round(mc.x / 16) === door.switch.x && Math.round(mc.y / 16) && door.switch.y) {
             steping = true;
           }
         }
@@ -33,43 +33,43 @@ let loop = GameLoop({
           } else {
             tile = singleDoor.tileOff
           }
-          tileEngine.setTileAtLayer("lvl" + (currentLvl + 1), { row: singleDoor.y, col: singleDoor.x }, tile)
+          tileEngine.setTileAtLayer("lvl" + (cl + 1), { row: singleDoor.y, col: singleDoor.x }, tile)
         }
       }
     }
-    renderQueue.sprite.forEach(element => {
-      element.obj.move();
-      element.obj.update();
+    rQ.sprite.forEach(element => {
+      element.move();
+      element.update();
 
     });
-    if (typeof mainCharacter !== "undefined") {
-      let oldX = mainCharacter.x
-      let oldY = mainCharacter.y
-      if (keyPressed("space") && numOfClones < levels[currentLvl].spawns.length - 1) {
+    if (typeof mc !== "undefined") {
+      let oldX = mc.x
+      let oldY = mc.y
+      if (keyPressed("space") && nC < lv[cl].spawns.length - 1) {
         if (clone.length > 30) {
           createClone(clone);
           clone = []
-          numOfClones++;
-          mainCharacter.x = levels[currentLvl].spawns[numOfClones].x;
-          mainCharacter.x = levels[currentLvl].spawns[numOfClones].y;
+          nC++;
+          mc.x = lv[cl].spawns[nC].x;
+          mc.x = lv[cl].spawns[nC].y;
 
         }
       }
 
-      mainCharacter.move();
-      let animation = mainCharacter.updateAnimation();
-      let turnDirection = mainCharacter.turnDirection;
-      mainCharacter.playAnimation(animation)
-      if (numOfClones < levels[currentLvl].spawns.length - 1) {
-        clone.push({ x: mainCharacter.x, y: mainCharacter.y, animation: animation, turnDirection: turnDirection });
+      mc.move();
+      let animation = mc.updateAnimation();
+      let td = mc.td;
+      mc.playAnimation(animation)
+      if (nC < lv[cl].spawns.length - 1) {
+        clone.push({ x: mc.x, y: mc.y, animation: animation, td: td });
       }
 
       //end level
-      if (mainCharacter.isInEndSpot()) {
+      if (mc.isInEndSpot()) {
         nextLevel();
       }
 
-      mainCharacter.update();
+      mc.update();
       if (keyPressed("r")) {
         reloadLevel();
       }
@@ -77,25 +77,25 @@ let loop = GameLoop({
   },
   render: function () {
     if (typeof tileEngine !== "undefined") {
-      tileEngine.renderLayer("lvl" + (currentLvl + 1));
-      renderQueue.sprite.forEach(element => {
-        element.obj.render();
+      tileEngine.renderLayer("lvl" + (cl + 1));
+      rQ.sprite.forEach(element => {
+        element.render();
       });
     }
-    let clones = renderQueue.sprite.length;
-    let spawns = levels[currentLvl].spawns.length;
+    let clones = rQ.sprite.length;
+    let spawns = lv[cl].spawns.length;
 
     if (spawns > 1) {
       if (clones < spawns - 1) {
-        document.getElementById("clones").innerText = spawns - clones - 1 + " clone" + (spawns - clones - 1 > 1 ? "s" : "") + " left";
+        $("clones").innerText = spawns - clones - 1 + " clone" + (spawns - clones - 1 > 1 ? "s" : "") + " left";
       } else {
-        document.getElementById("clones").innerText = "No clones left"
+        $("clones").innerText = "No clones left"
       }
     } else {
-      document.getElementById("clones").innerText = "";
+      $("clones").innerText = "";
     }
-    if (typeof mainCharacter !== "undefined") {
-      mainCharacter.render();
+    if (typeof mc !== "undefined") {
+      mc.render();
     }
   }
 });
@@ -108,34 +108,37 @@ function resize() {
   let scaleAmountX = Math.floor(window.innerWidth / 320);
 
   if (scaleAmountY > scaleAmountX) {
-    document.getElementById("game").style.transform = "scale(" + scaleAmountX + ") translateZ(0)";
-    document.getElementById("container").style.width = (320 * scaleAmountX) + "px"
-    document.getElementById("container").style.height = (192 * scaleAmountX) + "px"
+    $("game").style.transform = "scale(" + scaleAmountX + ") translateZ(0)";
+    $("container").style.width = (320 * scaleAmountX) + "px"
+    $("container").style.height = (192 * scaleAmountX) + "px"
   } else {
-    document.getElementById("game").style.transform = "scale(" + scaleAmountY + ") translateZ(0)";
-    document.getElementById("container").style.width = (320 * scaleAmountY) + "px"
-    document.getElementById("container").style.height = (192 * scaleAmountY) + "px"
+    $("game").style.transform = "scale(" + scaleAmountY + ") translateZ(0)";
+    $("container").style.width = (320 * scaleAmountY) + "px"
+    $("container").style.height = (192 * scaleAmountY) + "px"
   }
 
 }
 function nextLevel() {
-  currentLvl++;
+  cl++;
   clone = [];
-  numOfClones = 0;
-  renderQueue.sprite = []
-  mainCharacter.x = levels[currentLvl].spawns[numOfClones].x * 16;
-  mainCharacter.y = levels[currentLvl].spawns[numOfClones].y * 16;
-  document.getElementById("hint").innerText = levels[currentLvl].text;
+  nC = 0;
+  rQ.sprite = []
+  mc.x = lv[cl].spawns[nC].x * 16;
+  mc.y = lv[cl].spawns[nC].y * 16;
+  $("hint").innerText = lv[cl].text;
 }
 function reloadLevel() {
-  currentLvl--
+  cl--
   nextLevel();
 }
 
-function repeatArray(array, times) {
+function rA(array, times) {
   merged = array;
   for (let i = 0; i < times; i++) {
     merged = merged.concat(array)
   }
   return merged;
+}
+function $(id) {
+  return document.getElementById(id)
 }

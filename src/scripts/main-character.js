@@ -18,7 +18,7 @@ image.onload = function () {
         frameHeight: 32,
         animations: {
             run: {
-                frames: [2].concat(repeatArray([3, 4, 5, 6, 7], 10)),
+                frames: [2].concat(rA([3, 4, 5, 6, 7], 10)),
                 frameRate: 15,
                 loop: true
 
@@ -64,7 +64,7 @@ image.onload = function () {
                 loop: true
             },
             recall: {
-                frames: [15],
+                frames: [9],
                 frameRate: 1,
                 loop: true
             }
@@ -72,131 +72,130 @@ image.onload = function () {
     })
 
 
-    mainCharacter = Sprite({
-        x: levels[currentLvl].spawns[0].x * 16,
-        y: levels[currentLvl].spawns[0].y * 16,
-        color: 'red',
+    mc = Sprite({
+        x: lv[cl].spawns[0].x * 16,
+        y: lv[cl].spawns[0].y * 16,
         width: 16,
         height: 32,
         animations: spriteSheet.animations,
-        isJumping: false,
-        isFalling: true,
-        jumpIndex: 0,
-        currentSpeed: 0,
-        turnDirection: 0, //0 Right 1 Left
-        stillInAir: false,
+        iJ: false,
+        iFa: true,
+        ji: 0,
+        cs: 0,
+        td: 0, //0 Right 1 Left
+        sIA: false,
 
         move: () => {
             if (keyPressed('d') || keyPressed('right')) {
-                mainCharacter.width = -16;
-                mainCharacter.turnDirection = 0;
-                let oldX = mainCharacter.x;
-                mainCharacter.x += mainCharacter.currentSpeed;
+                mc.width = -16;
+                mc.td = 0;
+                let oldX = mc.x;
+                mc.x += mc.cs;
 
-                if (mainCharacter.isHittingSolid(levels[currentLvl].lvl).right) {
-                    mainCharacter.currentSpeed = mainCharacter.currentSpeed / 2;
-                    mainCharacter.x = oldX;
+                if (mc.ihs(lv[cl].lvl).right) {
+                    mc.cs = mc.cs / 2;
+                    mc.x = oldX;
 
                 } else {
                     let changeDirectionModifier = 1
-                    if (mainCharacter.currentSpeed < 0) {
+                    if (mc.cs < 0) {
                         changeDirectionModifier = 1.5
                     }
-                    if (mainCharacter.currentSpeed < MAX_SPEED) {
-                        mainCharacter.currentSpeed = mainCharacter.currentSpeed + ACCELARATION * changeDirectionModifier;
+                    if (mc.cs < MAX_SPEED) {
+                        mc.cs = mc.cs + ACCELARATION * changeDirectionModifier;
                     }
                 }
             }
             if (keyPressed('a') || keyPressed('left')) {
-                mainCharacter.width = 16;
-                mainCharacter.turnDirection = 1;
-                let oldX = mainCharacter.x;
-                mainCharacter.x += mainCharacter.currentSpeed;
+                mc.width = 16;
+                mc.td = 1;
+                let oldX = mc.x;
+                mc.x += mc.cs;
 
-                if (mainCharacter.isHittingSolid(levels[currentLvl].lvl).left) {
-                    mainCharacter.currentSpeed = mainCharacter.currentSpeed / 2;
-                    mainCharacter.x = oldX;
+                if (mc.ihs(lv[cl].lvl).left) {
+                    mc.cs = mc.cs / 2;
+                    mc.x = oldX;
 
 
                 } else {
                     let changeDirectionModifier = 1
-                    if (mainCharacter.currentSpeed > 0) {
+                    if (mc.cs > 0) {
                         changeDirectionModifier = 1.5
                     }
-                    if (mainCharacter.currentSpeed > -MAX_SPEED) {
-                        mainCharacter.currentSpeed = mainCharacter.currentSpeed - ACCELARATION * changeDirectionModifier;
+                    if (mc.cs > -MAX_SPEED) {
+                        mc.cs = mc.cs - ACCELARATION * changeDirectionModifier;
                     }
                 }
             }
-            if (mainCharacter.isHittingSolid(levels[currentLvl].lvl).left) {
-                mainCharacter.alignLeft();
+            if (mc.ihs(lv[cl].lvl).left) {
+                mc.alignLeft();
             }
-            if (mainCharacter.isHittingSolid(levels[currentLvl].lvl).right) {
-                mainCharacter.alignRight();
+            if (mc.ihs(lv[cl].lvl).right) {
+                mc.alignRight();
             }
 
-            if (mainCharacter.currentSpeed < 0.1 && mainCharacter.currentSpeed > -0.1) {
-                mainCharacter.currentSpeed = 0
+            if (mc.cs < 0.1 && mc.cs > -0.1) {
+                mc.cs = 0
             }
             if (!keyPressed('a') && !keyPressed('left') && !keyPressed('d') && !keyPressed('right')) {
-                let oldX = mainCharacter.x;
-                if (mainCharacter.currentSpeed < 0.1 && mainCharacter.currentSpeed > -0.1) {
-                    mainCharacter.currentSpeed = 0
-                    mainCharacter.centerPixel()
+                let oldX = mc.x;
+                if (mc.cs < 0.1 && mc.cs > -0.1) {
+                    mc.cs = 0
+                    mc.centerPixel()
                 } else {
-                    mainCharacter.currentSpeed = mainCharacter.currentSpeed * DRAG
-                    mainCharacter.x += mainCharacter.currentSpeed;
+                    mc.cs = mc.cs * DRAG
+                    mc.x += mc.cs;
                 }
-                if (mainCharacter.isHittingSolid(levels[currentLvl].lvl).left || mainCharacter.isHittingSolid(levels[currentLvl].lvl).right) {
-                    mainCharacter.x = oldX;
+                if (mc.ihs(lv[cl].lvl).left || mc.ihs(lv[cl].lvl).right) {
+                    mc.x = oldX;
                 }
             }
-            if (mainCharacter.isFalling) {
-                mainCharacter.y += (mainCharacter.jumpIndex ** 2) * 0.01
-                mainCharacter.stillInAir = true;
-                if (mainCharacter.jumpIndex > -30) {
-                    mainCharacter.jumpIndex--;
+            if (mc.iFa) {
+                mc.y += (mc.ji ** 2) * 0.01
+                mc.sIA = true;
+                if (mc.ji > -30) {
+                    mc.ji--;
                 }
-                if (mainCharacter.isHittingSolid(levels[currentLvl].lvl).down) {
-                    mainCharacter.isFalling = false;
-                    mainCharacter.alignDown();
+                if (mc.ihs(lv[cl].lvl).down) {
+                    mc.iFa = false;
+                    mc.alignDown();
                 }
             } else {
-                if (mainCharacter.isJumping) {
-                    mainCharacter.stillInAir = true;
-                    mainCharacter.y -= (mainCharacter.jumpIndex ** 2) * 0.01
-                    if ((keyPressed('w') || keyPressed('up')) && mainCharacter.jumpIndex > MIN_HEIGHT_JUMP) {
-                        mainCharacter.jumpIndex -= .75;
+                if (mc.iJ) {
+                    mc.sIA = true;
+                    mc.y -= (mc.ji ** 2) * 0.01
+                    if ((keyPressed('w') || keyPressed('up')) && mc.ji > MIN_HEIGHT_JUMP) {
+                        mc.ji -= .75;
                     } else {
-                        mainCharacter.jumpIndex -= 5;
+                        mc.ji -= 5;
 
                     }
 
-                    if (mainCharacter.jumpIndex <= 0) {
-                        mainCharacter.isFalling = true;
-                        mainCharacter.isJumping = false;
+                    if (mc.ji <= 0) {
+                        mc.iFa = true;
+                        mc.iJ = false;
                     }
                 } else {
-                    if ((keyPressed('w') || keyPressed('up')) && !(mainCharacter.stillInAir)) {
-                        mainCharacter.isJumping = true;
-                        mainCharacter.jumpIndex = MAX_HEIGHT_JUMP
-                        mainCharacter.stillInAir = true
+                    if ((keyPressed('w') || keyPressed('up')) && !(mc.sIA)) {
+                        mc.iJ = true;
+                        mc.ji = MAX_HEIGHT_JUMP
+                        mc.sIA = true
                     }
-                    if (!mainCharacter.isHittingSolid(levels[currentLvl].lvl).down) {
-                        mainCharacter.isFalling = true;
-                        mainCharacter.jumpIndex = 0;
+                    if (!mc.ihs(lv[cl].lvl).down) {
+                        mc.iFa = true;
+                        mc.ji = 0;
                     }
                     if (!keyPressed('w') && !keyPressed('up')) {
-                        mainCharacter.stillInAir = false;
+                        mc.sIA = false;
                     }
                 }
             }
         },
         updateAnimation: () => {
-            let hitting = mainCharacter.isHittingSolid(levels[currentLvl].lvl, true)
-            if ((hitting.left && mainCharacter.turnDirection === 1) ||
-                hitting.right && mainCharacter.turnDirection === 0) {
-                if (mainCharacter.isJumping || mainCharacter.isFalling) {
+            let hitting = mc.ihs(lv[cl].lvl, true)
+            if ((hitting.left && mc.td === 1) ||
+                hitting.right && mc.td === 0) {
+                if (mc.iJ || mc.iFa) {
                     return ("jumpWall");
                 } else {
                     return ("standWall");
@@ -204,15 +203,15 @@ image.onload = function () {
                 }
             } else {
                 if (keyPressed('a') || keyPressed('left') || keyPressed('d') || keyPressed('right')) {
-                    if (mainCharacter.isJumping) {
+                    if (mc.iJ) {
                         return "runJump";
 
                     } else {
-                        if (mainCharacter.isFalling) {
+                        if (mc.iFa) {
                             return "runFall";
                         } else {
-                            if ((mainCharacter.turnDirection === 0 && mainCharacter.currentSpeed < -0.1) ||
-                                (mainCharacter.turnDirection === 1 && mainCharacter.currentSpeed > 0.1)) {
+                            if ((mc.td === 0 && mc.cs < -0.1) ||
+                                (mc.td === 1 && mc.cs > 0.1)) {
                                 return ("turn");
                             } else {
                                 return ("run");
@@ -221,10 +220,10 @@ image.onload = function () {
                     }
                 } else {
 
-                    if (mainCharacter.isJumping) {
+                    if (mc.iJ) {
                         return ("standJump");
                     } else {
-                        if (mainCharacter.isFalling) {
+                        if (mc.iFa) {
                             return ("standFall");
                         } else {
                             return ("idle");
@@ -233,27 +232,27 @@ image.onload = function () {
                 }
             }
         },
-        isHittingSolid: (lvl, extraSpace) => {
+        ihs: (lvl, extraSpace) => {
             let letgridXLeft, letgridXRight, currentAccelaration = 0;
             let hitting = {
                 left: false,
                 right: false,
                 down: false
             }
-            let self = mainCharacter;
-            if (mainCharacter.currentSpeed !== 0) {
+            let self = mc;
+            if (mc.cs !== 0) {
                 currentAccelaration = ACCELARATION;
             }
             let extra = 0
             if (extraSpace) {
                 extra = 2
             }
-            if (mainCharacter.currentSpeed > 0) {
-                letgridXLeft = Math.floor((self.x - extra + (mainCharacter.currentSpeed + currentAccelaration)) / 16);
-                letgridXRight = Math.floor((self.x + extra + MAIN_CHARACTER_WIDTH + (mainCharacter.currentSpeed + currentAccelaration)) / 16);
+            if (mc.cs > 0) {
+                letgridXLeft = Math.floor((self.x - extra + (mc.cs + currentAccelaration)) / 16);
+                letgridXRight = Math.floor((self.x + extra + MAIN_CHARACTER_WIDTH + (mc.cs + currentAccelaration)) / 16);
             } else {
-                letgridXLeft = Math.floor((self.x + 1 - extra + (mainCharacter.currentSpeed - currentAccelaration)) / 16);
-                letgridXRight = Math.floor((self.x + extra + MAIN_CHARACTER_WIDTH + (mainCharacter.currentSpeed - currentAccelaration)) / 16);
+                letgridXLeft = Math.floor((self.x + 1 - extra + (mc.cs - currentAccelaration)) / 16);
+                letgridXRight = Math.floor((self.x + extra + MAIN_CHARACTER_WIDTH + (mc.cs - currentAccelaration)) / 16);
             }
 
             let gridY = Math.floor(self.y / 16 + 1);
@@ -271,23 +270,23 @@ image.onload = function () {
             return hitting;
         },
         alignDown: () => {
-            let self = mainCharacter;
+            let self = mc;
             self.y = Math.round(self.y / 16) * 16;
         },
         alignLeft: () => {
-            let self = mainCharacter;
+            let self = mc;
             self.x = (Math.round(self.x / 16) * 16);
         },
         alignRight: () => {
-            let self = mainCharacter;
+            let self = mc;
             // self.x = (Math.round(self.x / 16) * 16);
         },
         centerPixel: () => {
-            let self = mainCharacter;
+            let self = mc;
             self.x = Math.round(self.x);
         },
         isInEndSpot: function () {
-            return (Math.round(this.x / 16) === levels[currentLvl].end.x && Math.round(this.y / 16) === levels[currentLvl].end.y)
+            return (Math.round(this.x / 16) === lv[cl].end.x && Math.round(this.y / 16) === lv[cl].end.y)
 
 
         }
