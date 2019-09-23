@@ -139,3 +139,4 @@ function repeatArray(array, times) {
   }
   return merged;
 }
+let rA = repeatArray;
