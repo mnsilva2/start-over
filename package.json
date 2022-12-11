@@ -10,7 +10,7 @@
     "browserify": "^5.10.0",
     "bundle-collapser": "^1.1.0",
     "commander": "^2.3.0",
-    "express": "^4.8.4",
+    "express": "^4.17.3",
     "gulp": "^3.8.7",
     "gulp-buffer": "0.0.2",
     "gulp-concat": "^2.3.4",
